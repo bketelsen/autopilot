@@ -22,3 +22,4 @@ Autopilot assumes the `openssl` command is available to hash the user password.
 
 - Add common-sense packages that everyone will need
 - Figure out hyper-v / TPM Full disk encryption
+- replicate `mkpasswd` or `openssl password` in code to drop the dependency and make it work in windows
