@@ -16,10 +16,9 @@ The installation will reboot when complete. In the target, enter your encryption
 
 ## Assumptions
 
-Autopilot assumes the `openssl` command is available to hash the user password.
-
 ## TODO
 
 - Add common-sense packages that everyone will need
 - Figure out hyper-v / TPM Full disk encryption
-- replicate `mkpasswd` or `openssl password` in code to drop the dependency and make it work in windows
+- add enhanced mode for hyper-v installs
+- security review?

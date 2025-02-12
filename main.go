@@ -8,12 +8,13 @@ import (
 	"net"
 	"net/http"
 	"os"
-	"os/exec"
 	"strconv"
-	"strings"
 	"text/template"
 
 	"github.com/charmbracelet/huh"
+	"github.com/tredoe/osutil/user/crypt"
+	"github.com/tredoe/osutil/user/crypt/common"
+	"github.com/tredoe/osutil/user/crypt/sha512_crypt"
 )
 
 //go:embed autoinstall.yaml.tpl
@@ -47,6 +48,13 @@ type installation struct {
 }
 
 func main() {
+
+	var c crypt.Crypter
+	var s common.Salt
+	var shadowHash string
+	var saltString string
+	var err error
+
 	var ipAddress string
 	ip := GetOutboundIP()
 	ipAddress = ip.String()
@@ -65,6 +73,10 @@ func main() {
 
 	var inst installation
 	inst.Packages = basePackages
+
+	c = crypt.New(crypt.SHA512)
+	s = sha512_crypt.GetSalt()
+	saltString = fmt.Sprintf("%s%s", s.MagicPrefix, saltString)
 
 	form := huh.NewForm(
 		huh.NewGroup(huh.NewNote().
@@ -149,7 +161,7 @@ func main() {
 		),
 	).WithAccessible(accessible)
 
-	err := form.Run()
+	err = form.Run()
 	if err != nil {
 		log.Fatalf("error: %v", err)
 	}
@@ -167,15 +179,12 @@ func main() {
 		inst.IsVM = false
 	}
 	inst.ScriptURL = scriptUrl
-	cmd := exec.Command("openssl", "passwd", inst.Password)
-	var out strings.Builder
-	cmd.Stdout = &out
-	err = cmd.Run()
+
+	shadowHash, err = c.Generate([]byte(inst.Password), []byte(saltString))
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	inst.Password = strings.TrimSpace(out.String())
+	inst.Password = shadowHash
 
 	fmt.Println("Autoinstall URL:", autoinstallUrl)
 	fmt.Println("Intune Script:", scriptUrl)

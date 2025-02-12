@@ -2,7 +2,10 @@ module autopilot
 
 go 1.23.6
 
-require github.com/charmbracelet/huh v0.6.0
+require (
+	github.com/charmbracelet/huh v0.6.0
+	github.com/tredoe/osutil v1.5.0
+)
 
 require (
 	github.com/atotto/clipboard v0.1.4 // indirect
