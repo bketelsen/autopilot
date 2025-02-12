@@ -19,6 +19,7 @@ The installation will reboot when complete. In the target, enter your encryption
 ## TODO
 
 - Add common-sense packages that everyone will need
+- screenshots, better documentation, walkthrough examples
 - Figure out hyper-v / TPM Full disk encryption
 - add enhanced mode for hyper-v installs
 - security review?
